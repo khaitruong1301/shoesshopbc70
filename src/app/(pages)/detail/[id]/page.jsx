@@ -1,6 +1,33 @@
 import { getProductByIdAction } from '@/app/actions/service/productApi';
 import React from 'react'
 import Image from 'next/image';
+export async function generateMetadata({ params }) {
+    const prodDetail = await getProductByIdAction(params.id);
+  
+    return {
+      title: `${prodDetail.name} - Product Detail`,
+      description: prodDetail.description,
+      openGraph: {
+        title: prodDetail.name,
+        description: prodDetail.description,
+        url: `https://yourwebsite.com/products/${params.id}`,
+        images: [
+          {
+            url: prodDetail.image,
+            width: 500,
+            height: 500,
+            alt: prodDetail.alias,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: prodDetail.name,
+        description: prodDetail.description,
+        images: [prodDetail.image],
+      },
+    };
+  }
 const Detail = async (props) => { 
     //props param của server component
     const {params} = props;
